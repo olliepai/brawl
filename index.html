@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body>
+  <canvas id="canvas" width=500 height=500 />
+</body>
+
+<script>
+  var canvas = document.getElementById("canvas");
+  var context = canvas.getContext("2d");
+
+  document.addEventListener("keydown", keyDown);
+  document.addEventListener("keyup", keyUp);
+
+  var fighter = new Fighter();
+  var challenger = new Fighter();
+
+  setInterval(run, 33);
+
+  function run() {
+    clearBackground();
+    fighter.move();
+    challenger.move();
+    fighter.draw();
+    challenger.draw();
+  }
+
+  function clearBackground() {
+    context.fillStyle = "#f9653b";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function keyDown() {
+    if (event.key == 'a' && fighter.direction != fighter.LEFT) {
+      fighter.direction = fighter.LEFT;
+    } else if (event.key == 'd' && fighter.direction != fighter.RIGHT) {
+      fighter.direction = fighter.RIGHT;
+    } else if (event.key == 'w' && fighter.direction != fighter.UP) {
+      fighter.direction = fighter.UP;
+    } else if (event.key == 's' && fighter.direction != fighter.DOWN) {
+      fighter.direction = fighter.DOWN;
+    }
+
+    if (event.key == 'j' && challenger.direction != challenger.LEFT) {
+      challenger.direction = challenger.LEFT;
+    } else if (event.key == 'l' && challenger.direction != challenger.RIGHT) {
+      challenger.direction = challenger.RIGHT;
+    } else if (event.key == 'i' && challenger.direction != challenger.UP) {
+      challenger.direction = challenger.UP;
+    } else if (event.key == 'k' && challenger.direction != challenger.DOWN) {
+      challenger.direction = challenger.DOWN;
+    }
+  }
+
+  function keyUp() {
+    if (event.key == 'a' && fighter.direction == fighter.LEFT) {
+      fighter.direction = fighter.STOP;
+    } else if (event.key == 'd' && fighter.direction == fighter.RIGHT) {
+      fighter.direction = fighter.STOP;
+    } else if (event.key == 'w' && fighter.direction == fighter.UP) {
+      fighter.direction = fighter.STOP;
+    } else if (event.key == 's' && fighter.direction == fighter.DOWN) {
+      fighter.direction = fighter.STOP;
+    }
+
+    if (event.key == 'j' && challenger.direction == challenger.LEFT) {
+      challenger.direction = challenger.STOP;
+    } else if (event.key == 'l' && challenger.direction == challenger.RIGHT) {
+      challenger.direction = challenger.STOP;
+    } else if (event.key == 'i' && challenger.direction == challenger.UP) {
+      challenger.direction = challenger.STOP;
+    } else if (event.key == 'k' && challenger.direction == challenger.DOWN) {
+      challenger.direction = challenger.STOP;
+    }
+  }
+
+  function Fighter() {
+    this.x = 0;
+    this.y = 0;
+
+    this.direction;
+    this.STILL = 0;
+    this.LEFT = 1;
+    this.RIGHT = 2;
+    this.UP = 3;
+    this.DOWN = 4;
+    this.direction = this.STILL;
+
+    this.speed = 5;
+
+    this.move = function() {
+      if (this.direction == this.LEFT) {
+        this.x -= this.speed;
+      } else if (this.direction == this.RIGHT) {
+        this.x += this.speed;
+      } else if (this.direction == this.UP) {
+        this.y -= this.speed;
+      } else if (this.direction == this.DOWN) {
+        this.y += this.speed;
+      }
+    }
+
+    this.draw = function() {
+      context.fillStyle = "#25a8ea";
+      context.fillRect(this.x, this.y, 10, 10);
+    }
+  }
+</script>
+
+</html>
