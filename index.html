@@ -7,7 +7,7 @@
 </head>
 
 <body>
-  <canvas id="canvas" width=500 height=500 />
+  <canvas id="canvas" width=1300 height=600 />
 </body>
 
 <script>
@@ -20,10 +20,13 @@
   var fighter = new Fighter();
   var challenger = new Fighter();
 
-  setInterval(run, 33);
+  setInterval(run, 1000/60);
 
   function run() {
     clearBackground();
+    context.fillStyle = "#81f3f9";
+    context.fillRect(0, 500, 1300, 10);
+    fighter.physics();
     fighter.move();
     challenger.move();
     fighter.draw();
@@ -35,7 +38,7 @@
     context.fillRect(0, 0, canvas.width, canvas.height);
   }
 
-  function keyDown() {
+  function keyDown(event) {
     if (event.key == 'a' && fighter.direction != fighter.LEFT) {
       fighter.direction = fighter.LEFT;
     } else if (event.key == 'd' && fighter.direction != fighter.RIGHT) {
@@ -57,7 +60,7 @@
     }
   }
 
-  function keyUp() {
+  function keyUp(event) {
     if (event.key == 'a' && fighter.direction == fighter.LEFT) {
       fighter.direction = fighter.STOP;
     } else if (event.key == 'd' && fighter.direction == fighter.RIGHT) {
@@ -80,7 +83,7 @@
   }
 
   function manageState() {
-    
+
   }
 
   function Fighter() {
@@ -95,23 +98,33 @@
     this.DOWN = 4;
     this.direction = this.STILL;
 
-    this.speed = 5;
+    this.speedX = 5;
+    this.accelX = 0;
+    this.speedY = 0.000000001;
+    this.accelY = 0;
+    this.gravity = 5;
 
     this.move = function() {
       if (this.direction == this.LEFT) {
-        this.x -= this.speed;
+        this.x -= this.speedX;
       } else if (this.direction == this.RIGHT) {
-        this.x += this.speed;
+        this.x += this.speedX;
       } else if (this.direction == this.UP) {
-        this.y -= this.speed;
+        this.y -= this.speedY;
       } else if (this.direction == this.DOWN) {
-        this.y += this.speed;
+        this.y += this.speedY;
       }
+    }
+
+    this.physics = function() {
+      this.gravity += 0.01;
+      this.speedY += this.gravity;
+      this.y += this.speedY;
     }
 
     this.draw = function() {
       context.fillStyle = "#25a8ea";
-      context.fillRect(this.x, this.y, 10, 10);
+      context.fillRect(this.x, this.y, 50, 50);
     }
   }
 </script>
