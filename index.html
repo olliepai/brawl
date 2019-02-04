@@ -43,10 +43,8 @@
       fighter.direction = fighter.LEFT;
     } else if (event.key == 'd' && fighter.direction != fighter.RIGHT) {
       fighter.direction = fighter.RIGHT;
-    } else if (event.key == 'w' && fighter.direction != fighter.UP) {
-      fighter.direction = fighter.UP;
-    } else if (event.key == 's' && fighter.direction != fighter.DOWN) {
-      fighter.direction = fighter.DOWN;
+    } else if (event.key == 'w') {
+      fighter.jump();
     }
 
     if (event.key == 'j' && challenger.direction != challenger.LEFT) {
@@ -64,8 +62,6 @@
     if (event.key == 'a' && fighter.direction == fighter.LEFT) {
       fighter.direction = fighter.STOP;
     } else if (event.key == 'd' && fighter.direction == fighter.RIGHT) {
-      fighter.direction = fighter.STOP;
-    } else if (event.key == 'w' && fighter.direction == fighter.UP) {
       fighter.direction = fighter.STOP;
     } else if (event.key == 's' && fighter.direction == fighter.DOWN) {
       fighter.direction = fighter.STOP;
@@ -94,37 +90,58 @@
     this.STILL = 0;
     this.LEFT = 1;
     this.RIGHT = 2;
-    this.UP = 3;
-    this.DOWN = 4;
     this.direction = this.STILL;
 
     this.speedX = 5;
     this.accelX = 0;
-    this.speedY = 0.000000001;
+    this.speedY = 0;
     this.accelY = 0;
-    this.gravity = 5;
+    this.gravity = .6;
+	this.jumpSprite = new Image();
+	this.jumpSprite.src = "RyuJump.png";
+	
+	this.totalImages = 20;
+	this.currentSprite = 1;
+	this.currentImagePos = 0;
+	this.subImageWidth = 87;
+	this.subImageHeight = 192;
+	
+    this.isJumping = false;
 
     this.move = function() {
       if (this.direction == this.LEFT) {
         this.x -= this.speedX;
       } else if (this.direction == this.RIGHT) {
         this.x += this.speedX;
-      } else if (this.direction == this.UP) {
-        this.y -= this.speedY;
-      } else if (this.direction == this.DOWN) {
-        this.y += this.speedY;
       }
     }
 
     this.physics = function() {
-      this.gravity += 0.01;
       this.speedY += this.gravity;
       this.y += this.speedY;
+      if (this.y + 50 >= 500) {
+        this.y = 450;
+        this.speedY = 0;
+        this.isJumping = false;
+      }
+    }
+
+    this.jump = function() {
+      if (this.isJumping == false) {
+        this.speedY = -10;
+        this.isJumping = true;
+      }
     }
 
     this.draw = function() {
       context.fillStyle = "#25a8ea";
       context.fillRect(this.x, this.y, 50, 50);
+	  
+	  if(this.isJumping==true){
+		context.drawImage(this.currentSprite, 0, this.currentImagePos*this.subImageWidth, 
+		this.currentImagePos*this.subImageHeight, 
+		this.x, this.y, this.subImageWidth*2, this.subImageHeight*2);
+	  }
     }
   }
 </script>
