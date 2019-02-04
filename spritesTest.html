@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+
+<body>
+  <canvas width=800 height=600 id="canvas"></canvas>
+</body>
+
+<script>
+	var canvas = document.getElementById("canvas");
+	var context = canvas.getContext("2d");
+	var runner = new Runner();
+	
+	var rightSpriteHasLoaded = false;
+	var leftSpriteHasLoaded = false;
+	var upSpriteHasLoaded = false;
+	var standSpriteHasLoaded = false;
+	
+	console.log(runner.direction);
+	console.log("left sprite: " + runner.leftSprite.complete);
+	console.log("right sprite: " + runner.rightSprite.complete);
+	console.log("up sprite: " + runner.upSprite.complete);
+	
+	runner.rightSprite.onload = function() {
+		rightSpriteHasLoaded = true;
+	}
+	runner.leftSprite.onload = function() {
+		leftSpriteHasLoaded = true;
+	}
+	runner.upSprite.onload = function() {
+		upSpriteHasLoaded = true;
+	}
+
+	document.addEventListener("keydown", processKeyDown);
+	document.addEventListener("keyup", processKeyUp);
+  
+	setInterval(doStuff, 33);
+
+	function processKeyUp(event){
+		if(event.key == 'a' && runner.direction == 1){
+		runner.direction = 0;
+		}
+		else if(event.key == 'd' && runner.direction == 2){
+		runner.direction = 0;
+		}
+	}
+	function processKeyDown(event){
+		if(event.key == 'a' && runner.direction != 1){
+			runner.direction = 1;
+			runner.currentImagePos = 0;
+			runner.currentSprite = runner.leftSprite;
+		} 
+		else if (event.key == 'd' && runner.direction != 2){
+			runner.direction = 2;
+			runner.currentImagePos = 0;
+			runner.currentSprite = runner.rightSprite;
+		}
+	}
+
+	function clearBackground(){
+	context.fillStyle = "yellow";
+	context.fillRect(0,0, canvas.width, canvas.height);
+	}
+	
+	function doStuff(){
+		if(rightSpriteHasLoaded && leftSpriteHasLoaded && upSpriteHasLoaded){
+			clearBackground();
+			runner.move();
+			runner.draw();
+		}
+	}
+	setInterval(doStuff, 33);
+	function Runner(){
+		this.x = 300;
+		this.y = 540;
+		this.rightSprite = new Image();
+		this.rightSprite.src = "RyuRight.jpg";
+		this.leftSprite = new Image();
+		this.leftSprite.src = "RyuLeft.jpg";
+		this.upSprite = new Image();
+		this.upSprite.src = "RyuJump.jpg";
+		this.standSprite = new Image();
+		this.standSprite.src = "RyuStand.jpg";
+		//this.downSprite = new Image();
+		//this.downSprite.src = "RyuCroutch.png";
+
+		this.totalImages = 6;
+		this.currentImagePos = 0;
+		this.subImageWidth = 126;
+		this.subImageHeight = 132;
+		this.totalImages2 = 11;
+		this.subImageHeight2 = 124;
+		this.subImageWidth2 = 130;
+		this.totalImages3 = 20;
+		this.subImageHeight3 = 192;
+		this.subImageWidth3 = 87;
+	
+		this.currentSprite = this.leftSprite;
+		
+		// 0 is not moving 1 is left 2 is right, 3 is up, 4 is down
+		this.direction = 2;
+		this.speed = 5;	
+
+		this.move = function(){
+		if(this.direction == 1){//left
+			this.x -= this.speed;
+			this.currentImagePos++;
+		}
+		else if (this.direction == 2){//right
+			this.x += this.speed;
+			this.currentImagePos++;
+			runner.currentSprite = runner.rightSprite;
+		} else if(this.direction == 3){//up
+			this.y-= this.speed;
+			this.currentImagePos++;
+		} else if(this.direction == 4){//down
+			this.y += this.speed;
+			this.currentImagePos++;
+		}
+		
+		else {
+			this.currentImagePos = 0;
+		}
+		this.currentImagePos %= this.totalImages;
+		}
+	this.draw = function() {
+		if(this.direction == 1 && leftSpriteHasLoaded){//left
+          context.drawImage(this.currentSprite, 
+		  this.currentImagePos*this.subImageWidth, 0,
+          this.subImageWidth, this.subImageHeight,
+          this.x, this.y, this.subImageWidth, this.subImageHeight);
+		}	
+		else if(this.direction == 2 && rightSpriteHasLoaded == true){//right
+			context.drawImage(this.currentSprite,
+			this.currentImagePos*this.subImageWidth2, 0,
+			this.subImageWidth2, this.subImageHeight2,
+			this.x, this.y, this.subImageWidth2, this.subImageHeight2);
+		} else if(this.direction == 3 && upSpriteHasLoaded){
+			context.drawImage(this.currentSprite,
+			this.currentImagePos*this.subImageWidth3, 0,
+			this.subImageWidth3, this.subImageHeight3,
+			this.x, this.y, this.subImageWidth3, this.subImageHeight3);
+		}
+	}
+  }
+
+</script>
+
+</html>
