@@ -73,10 +73,10 @@
 			runner.draw();
 		}
 	}
-	setInterval(doStuff, 33);
+	setInterval(doStuff, 300);
 	function Runner(){
 		this.x = 300;
-		this.y = 540;
+		this.y = 400;
 		this.rightSprite = new Image();
 		this.rightSprite.src = "RyuRight.jpg";
 		this.leftSprite = new Image();
@@ -98,41 +98,51 @@
 		this.totalImages3 = 20;
 		this.subImageHeight3 = 192;
 		this.subImageWidth3 = 87;
+		this.totalImages4 = 24;
+		this.subImageHeight4 = 72;
+		this.subImageWidth4 = 54;
+		
 	
 		this.currentSprite = this.leftSprite;
 		
 		// 0 is not moving 1 is left 2 is right, 3 is up, 4 is down
-		this.direction = 2;
+		this.direction = 0;
 		this.speed = 5;	
 
 		this.move = function(){
-		if(this.direction == 1){//left
-			this.x -= this.speed;
-			this.currentImagePos++;
-		}
-		else if (this.direction == 2){//right
-			this.x += this.speed;
-			this.currentImagePos++;
-			runner.currentSprite = runner.rightSprite;
-		} else if(this.direction == 3){//up
-			this.y-= this.speed;
-			this.currentImagePos++;
-		} else if(this.direction == 4){//down
-			this.y += this.speed;
-			this.currentImagePos++;
-		}
+			if(this.direction == 1){//left
+				this.x -= this.speed;
+				this.currentImagePos++;
+			}
+			else if (this.direction == 2){//right
+				this.x += this.speed;
+				this.currentImagePos++;
+				runner.currentSprite = runner.rightSprite;
+			} else if(this.direction == 3){//up
+				this.y-= this.speed;
+				this.currentImagePos++;
+			} else if(this.direction == 4){//down
+				this.y += this.speed;
+				this.currentImagePos++;
+			}
 		
-		else {
-			this.currentImagePos = 0;
-		}
-		this.currentImagePos %= this.totalImages;
+			else {
+				this.currentImagePos = 0;
+			}
+			this.currentImagePos %= this.totalImages;
 		}
 	this.draw = function() {
+		if(this.direction == 0 && standSpriteHasLoaded){//standing
+			context.drawImage(this.currentSprite, 
+			this.currentImagePos*this.subImageWidth4, 0,
+			this.subImageWidth4, this.subImageHeight4,
+			this.x, this.y, this.subImageWidth4, this.subImageHeight4);
+		}
 		if(this.direction == 1 && leftSpriteHasLoaded){//left
-          context.drawImage(this.currentSprite, 
-		  this.currentImagePos*this.subImageWidth, 0,
-          this.subImageWidth, this.subImageHeight,
-          this.x, this.y, this.subImageWidth, this.subImageHeight);
+			context.drawImage(this.currentSprite, 
+			this.currentImagePos*this.subImageWidth, 0,
+			this.subImageWidth, this.subImageHeight,
+			this.x, this.y, this.subImageWidth, this.subImageHeight);
 		}	
 		else if(this.direction == 2 && rightSpriteHasLoaded == true){//right
 			context.drawImage(this.currentSprite,
