@@ -7,8 +7,10 @@
 </head>
 
 <body>
-  <canvas id="canvas" width=1300 height=600 />
+  <canvas id="canvas" width=1000 height=750 />
 </body>
+
+<script type="text/javascript" src="./camera.js"></script>
 
 <script>
   var canvas = document.getElementById("canvas");
@@ -17,25 +19,21 @@
   document.addEventListener("keydown", keyDown);
   document.addEventListener("keyup", keyUp);
 
-  var fighter = new Fighter();
-  var challenger = new Fighter();
+  var fighter = new Fighter(64, 500, "#25a8ea");
+  var challenger = new Fighter(1000 - 64 - 50, 500, "#f49242");
+
+  var camera = new Camera();
 
   setInterval(run, 1000/60);
 
   function run() {
-    clearBackground();
-    context.fillStyle = "#81f3f9";
-    context.fillRect(0, 500, 1300, 10);
+    camera.drawBackground(fighter, challenger);
     fighter.physics();
+    challenger.physics();
     fighter.move();
     challenger.move();
     fighter.draw();
     challenger.draw();
-  }
-
-  function clearBackground() {
-    context.fillStyle = "#f9653b";
-    context.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   function keyDown(event) {
@@ -51,30 +49,22 @@
       challenger.direction = challenger.LEFT;
     } else if (event.key == 'l' && challenger.direction != challenger.RIGHT) {
       challenger.direction = challenger.RIGHT;
-    } else if (event.key == 'i' && challenger.direction != challenger.UP) {
-      challenger.direction = challenger.UP;
-    } else if (event.key == 'k' && challenger.direction != challenger.DOWN) {
-      challenger.direction = challenger.DOWN;
+    } else if (event.key == 'i') {
+      challenger.jump();
     }
   }
 
   function keyUp(event) {
     if (event.key == 'a' && fighter.direction == fighter.LEFT) {
-      fighter.direction = fighter.STOP;
+      fighter.direction = fighter.STILL;
     } else if (event.key == 'd' && fighter.direction == fighter.RIGHT) {
-      fighter.direction = fighter.STOP;
-    } else if (event.key == 's' && fighter.direction == fighter.DOWN) {
-      fighter.direction = fighter.STOP;
+      fighter.direction = fighter.STILL;
     }
 
     if (event.key == 'j' && challenger.direction == challenger.LEFT) {
-      challenger.direction = challenger.STOP;
+      challenger.direction = challenger.STILL;
     } else if (event.key == 'l' && challenger.direction == challenger.RIGHT) {
-      challenger.direction = challenger.STOP;
-    } else if (event.key == 'i' && challenger.direction == challenger.UP) {
-      challenger.direction = challenger.STOP;
-    } else if (event.key == 'k' && challenger.direction == challenger.DOWN) {
-      challenger.direction = challenger.STOP;
+      challenger.direction = challenger.STILL;
     }
   }
 
@@ -82,28 +72,30 @@
 
   }
 
-  function Fighter() {
-    this.x = 0;
-    this.y = 0;
+  function Fighter(x, y, color) {
+    this.color = color;
+
+    this.x = x;
+    this.y = y;
+    this.width = 50;
+    this.height = 50;
 
     this.direction;
     this.STILL = 0;
-    this.LEFT = 1;
-    this.RIGHT = 2;
+    this.LEFT = -1;
+    this.RIGHT = 1;
     this.direction = this.STILL;
 
-    this.speedX = 5;
-    this.accelX = 0;
+    this.speedX = 8;
     this.speedY = 0;
-    this.accelY = 0;
     this.gravity = .6;
 
     this.isJumping = false;
 
     this.move = function() {
-      if (this.direction == this.LEFT) {
+      if (this.direction == this.LEFT && this.x > 0) {
         this.x -= this.speedX;
-      } else if (this.direction == this.RIGHT) {
+      } else if (this.direction == this.RIGHT && this.x < canvas.width - this.width) {
         this.x += this.speedX;
       }
     }
@@ -111,8 +103,8 @@
     this.physics = function() {
       this.speedY += this.gravity;
       this.y += this.speedY;
-      if (this.y + 50 >= 500) {
-        this.y = 450;
+      if (this.y + 50 >= 660) {
+        this.y = 610;
         this.speedY = 0;
         this.isJumping = false;
       }
@@ -126,8 +118,8 @@
     }
 
     this.draw = function() {
-      context.fillStyle = "#25a8ea";
-      context.fillRect(this.x, this.y, 50, 50);
+      context.fillStyle = color;
+      context.fillRect(this.x, this.y, this.width, this.height);
     }
   }
 </script>
