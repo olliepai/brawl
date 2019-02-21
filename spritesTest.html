@@ -19,6 +19,7 @@
 	var leftSpriteHasLoaded = false;
 	var upSpriteHasLoaded = false;
 	var standSpriteHasLoaded = false;
+	var kickSpriteHasLoaded = false;
 	
 	console.log(runner.direction);
 	console.log("left sprite: " + runner.leftSprite.complete);
@@ -34,17 +35,29 @@
 	runner.upSprite.onload = function() {
 		upSpriteHasLoaded = true;
 	}
+	runner.standSprite.onload = function() {
+		standSpriteHasLoaded = true;
+	}
+	runner.kickSprite.onload = function() {
+		kickSpriteHasLoaded = true;
+	}
 
 	document.addEventListener("keydown", processKeyDown);
 	document.addEventListener("keyup", processKeyUp);
   
-	setInterval(doStuff, 33);
+	setInterval(doStuff, 60);
 
 	function processKeyUp(event){
 		if(event.key == 'a' && runner.direction == 1){
 		runner.direction = 0;
 		}
 		else if(event.key == 'd' && runner.direction == 2){
+		runner.direction = 0;
+		}
+		else if(event.key == 'w' && runner.direction == 3){
+		runner.direction = 0;
+		}
+		else if(event.key == 'c' && runner.direction == 4){
 		runner.direction = 0;
 		}
 	}
@@ -59,10 +72,20 @@
 			runner.currentImagePos = 0;
 			runner.currentSprite = runner.rightSprite;
 		}
+		else if (event.key == 'w' && runner.direction != 3){
+			runner.direction = 3;
+			runner.currentImagePos = 0;
+			runner.currentSprite = runner.upSprite;
+		}
+		else if(event.key == 'c' && runner.direction != 4){
+			runner.direction = 4;
+			runner.currentImagePos = 0;
+			runner.currentSprite = runner.kickSprite;
+		}
 	}
 
 	function clearBackground(){
-	context.fillStyle = "yellow";
+	context.fillStyle = "orange";
 	context.fillRect(0,0, canvas.width, canvas.height);
 	}
 	
@@ -71,6 +94,7 @@
 			clearBackground();
 			runner.move();
 			runner.draw();
+			console.log(runner.direction);
 		}
 	}
 	setInterval(doStuff, 300);
@@ -78,13 +102,15 @@
 		this.x = 300;
 		this.y = 400;
 		this.rightSprite = new Image();
-		this.rightSprite.src = "RyuRight.jpg";
+		this.rightSprite.src = "RyuRight3.png";
 		this.leftSprite = new Image();
-		this.leftSprite.src = "RyuLeft.jpg";
+		this.leftSprite.src = "RyuLeft2.png";
 		this.upSprite = new Image();
-		this.upSprite.src = "RyuJump.jpg";
+		this.upSprite.src = "RyuJump2.png";
 		this.standSprite = new Image();
-		this.standSprite.src = "RyuStand.jpg";
+		this.standSprite.src = "RyuStand2.png";
+		this.kickSprite = new Image();
+		this.kickSprite.src = "RyuKick2.png";
 		//this.downSprite = new Image();
 		//this.downSprite.src = "RyuCroutch.png";
 
@@ -96,12 +122,21 @@
 		this.subImageHeight2 = 124;
 		this.subImageWidth2 = 130;
 		this.totalImages3 = 20;
-		this.subImageHeight3 = 192;
-		this.subImageWidth3 = 87;
+		this.subImageHeight3 = 99;
+		this.subImageWidth3 = 45;
 		this.totalImages4 = 24;
 		this.subImageHeight4 = 72;
 		this.subImageWidth4 = 54;
-		
+		this.subImageHeight5 = 66;
+		this.subImageWidth5 = 76;
+		//<----------------Each sub image has a different Width so I can't have a a single sub image width or height----------->
+		//-----------------Must use either a texture packer like Phaser or tab talking about editing individual 
+		//-----------------frames where it cuts out the image, scaling, and each subimage width and height
+		//this.subImageWidth5 = 
+		// this.subImageHeight5 = 
+		//<-------------------------------------------------------------------------------------------------------------------->
+		console.log("x: " + this.x);
+		console.log("y: " + this.y);
 	
 		this.currentSprite = this.leftSprite;
 		
@@ -117,15 +152,20 @@
 			else if (this.direction == 2){//right
 				this.x += this.speed;
 				this.currentImagePos++;
-				runner.currentSprite = runner.rightSprite;
 			} else if(this.direction == 3){//up
-				this.y-= this.speed;
 				this.currentImagePos++;
+				console.log("direction set to up");
 			} else if(this.direction == 4){//down
-				this.y += this.speed;
 				this.currentImagePos++;
+				console.log("direction set to spinning kick");
 			}
-		
+			else if(this.direction == 0){//standing
+				this.x = this.x;
+				this.y = this.y;
+				this.currentImagePos++;
+				this.currentSprite = this.standSprite;
+				console.log("direction set to standing");
+			}
 			else {
 				this.currentImagePos = 0;
 			}
@@ -136,24 +176,35 @@
 			context.drawImage(this.currentSprite, 
 			this.currentImagePos*this.subImageWidth4, 0,
 			this.subImageWidth4, this.subImageHeight4,
-			this.x, this.y, this.subImageWidth4, this.subImageHeight4);
+			this.x, this.y, 126, 132);
+			console.log("Drawing standing");
 		}
 		if(this.direction == 1 && leftSpriteHasLoaded){//left
 			context.drawImage(this.currentSprite, 
 			this.currentImagePos*this.subImageWidth, 0,
 			this.subImageWidth, this.subImageHeight,
-			this.x, this.y, this.subImageWidth, this.subImageHeight);
+			this.x, this.y, 126, 132);
+			console.log("drawing left");
 		}	
 		else if(this.direction == 2 && rightSpriteHasLoaded == true){//right
 			context.drawImage(this.currentSprite,
 			this.currentImagePos*this.subImageWidth2, 0,
 			this.subImageWidth2, this.subImageHeight2,
-			this.x, this.y, this.subImageWidth2, this.subImageHeight2);
-		} else if(this.direction == 3 && upSpriteHasLoaded){
+			this.x, this.y, 126, 132);
+			console.log("drawing right");
+		} else if(this.direction == 3 && upSpriteHasLoaded){//jump
 			context.drawImage(this.currentSprite,
 			this.currentImagePos*this.subImageWidth3, 0,
 			this.subImageWidth3, this.subImageHeight3,
-			this.x, this.y, this.subImageWidth3, this.subImageHeight3);
+			this.x, this.y, 50*1.2, 132*1.2);
+			console.log("drawing up sprite");			
+		}
+		else if(this.direction == 4 && kickSpriteHasLoaded == true){
+			context.drawImage(this.currentSprite,
+			this.currentImagePos*this.subImageWidth5, 0,
+			this.subImageWidth5, this.subImageHeigth5,
+			this.x, this.y, 126, 132);
+			console.log("drawing spinning kick sprite");
 		}
 	}
   }
