@@ -129,6 +129,9 @@
 		this.subImageWidth4 = 54;
 		this.subImageHeight5 = 66;
 		this.subImageWidth5 = 76;
+		this.totalImages5 = 14;
+		
+		var testTimer = setInterval(myTimer, 500);
 		//<----------------Each sub image has a different Width so I can't have a a single sub image width or height----------->
 		//-----------------Must use either a texture packer like Phaser or tab talking about editing individual 
 		//-----------------frames where it cuts out the image, scaling, and each subimage width and height
@@ -144,6 +147,10 @@
 		this.direction = 0;
 		this.speed = 5;	
 
+		function myTimer(){
+			console.log("every second");
+		}
+		
 		this.move = function(){
 			if(this.direction == 1){//left
 				this.x -= this.speed;
@@ -170,6 +177,26 @@
 				this.currentImagePos = 0;
 			}
 			this.currentImagePos %= this.totalImages;
+			if(this.direction == 1){
+				this.currentImagePos %= this.totalImages;
+				console.log("using totalimages 1");
+			}
+			else if(this.direction == 2){
+				this.currentImagePos %= this.totalImages2;
+				console.log("using totalimages 2");
+			}
+			else if(this.direction == 3){
+				this.currentImagePos %= this.totalImages3;
+				console.log("using totalimages 3");
+			}
+			else if(this.direction == 4){
+				this.currentImagePos %= this.totalImages5;
+				console.log("using totalimages 5");
+			}
+			else if(this.direction == 0){
+				this.currentImagePos %= this.totalImages4;
+				console.log("using totalimages 4");
+			}
 		}
 	this.draw = function() {
 		if(this.direction == 0 && standSpriteHasLoaded){//standing
