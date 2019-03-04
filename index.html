@@ -39,9 +39,13 @@
 
   function keyDown(event) {
     if (event.key == 'a' && fighter.direction != fighter.LEFT) {
-      fighter.direction = fighter.LEFT;
+	  fighter.direction = fighter.LEFT;
+	  fighter.currentImagePos = 0;
+	  fighter.currentSprite = fighter.leftSprite;
     } else if (event.key == 'd' && fighter.direction != fighter.RIGHT) {
       fighter.direction = fighter.RIGHT;
+	  this.currentImagePos = 0;
+	  fighter.currentSprite = fighter.rightSprite;		
     } else if (event.key == 'w') {
       fighter.jump();
     }
