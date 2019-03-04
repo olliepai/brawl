@@ -17,10 +17,10 @@ function Fighter(x, y, color) {
   this.gravity = .6;
 
   this.isJumping = false;
+  this.isAttacking = false;
 
   this.health = 100;
-
-  this.isAttacking = false;
+  this.score = 0;
 
   this.move = function() {
     if (this.direction == this.LEFT && this.x > 0) {
@@ -58,7 +58,7 @@ function Fighter(x, y, color) {
 
   this.lightAttack = function(hit) {
     if (this.hits(hit)) {
-      console.log(hit.health);
+      //console.log(hit.health);
       hit.health -= 4;
     }
   }
@@ -66,7 +66,7 @@ function Fighter(x, y, color) {
   this.heavyAttack = function(hit) {
     if (this.hits(hit)) {
       hit.health -= 8;
-      console.log(hit.health);
+      //console.log(hit.health);
     }
   }
 }
