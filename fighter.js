@@ -20,6 +20,8 @@ function Fighter(x, y, color) {
 
   this.health = 100;
 
+  this.isAttacking = false;
+
   this.move = function() {
     if (this.direction == this.LEFT && this.x > 0) {
       this.x -= this.speedX;
@@ -31,17 +33,15 @@ function Fighter(x, y, color) {
   this.physics = function() {
     this.speedY += this.gravity;
     this.y += this.speedY;
-    if (this.y + 50 >= 660) {
+    if (this.y + this.height >= 660) {
       this.y = 610;
       this.speedY = 0;
-      this.isJumping = false;
     }
   }
 
   this.jump = function() {
-    if (this.isJumping == false) {
+    if (this.y + this.height >= 660) {
       this.speedY = -10;
-      this.isJumping = true;
     }
   }
 
@@ -50,16 +50,23 @@ function Fighter(x, y, color) {
     context.fillRect(this.x, this.y, this.width, this.height);
   }
 
-  this.lightAttack = function(hit) {
-    if (this.hits(hit)) {
-      hit.health -= 1;
-      console.log(hit.health);
-    }
-  }
-
   this.hits = function(hit) {
     if (this.x + this.width >= hit.x && this.x <= hit.x + hit.width && this.y + this.height >= hit.y && this.y <= hit.y + hit.height) {
       return true;
+    }
+  }
+
+  this.lightAttack = function(hit) {
+    if (this.hits(hit)) {
+      console.log(hit.health);
+      hit.health -= 4;
+    }
+  }
+
+  this.heavyAttack = function(hit) {
+    if (this.hits(hit)) {
+      hit.health -= 8;
+      console.log(hit.health);
     }
   }
 }
