@@ -1,7 +1,7 @@
 function Camera() {
   this.background = new Image();
-  this.background.src = "bathhouse.png";
-  this.cameraPos = (1867 / 2) - (canvas.width / 2);
+  this.background.src = "./assets/bathhouse.png";
+  this.cameraPos = (1867 / 2) - (canvas.width / 2) - 25;
   this.cameraSpeed = fighter.speedX;
 
   this.direction;
