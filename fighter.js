@@ -37,7 +37,8 @@ function Fighter(x, y, color) {
 	this.subImageWidth = 126;
 	this.subImageHeight = 132;
 	this.totalImages2 = 11;
-	this.subImageHeight2 = 124;
+	this.subImageHeight2 = 130;
+	this.subImageWidth2 = 124;
   
 	this.isJumping = false;
 
@@ -60,8 +61,8 @@ function Fighter(x, y, color) {
 			console.log("using totalimages 1");
 		}
 		else if(this.direction == this.RIGHT){
-			this.currentSprite = this.rightSprite;
-			this.currentImagePos %= this.totalImages2;
+			this.currentSprite = this.rightSprite;	
+			this.currentImagePos %= this.totalImages2;	
 			console.log("using totalimages 2");
 		}
 	}
@@ -84,7 +85,7 @@ function Fighter(x, y, color) {
 	}
 
 	this.draw = function() {
-		if(this.direction == this.LEFT && leftSpriteHasLoaded){//left
+	if(this.direction == this.LEFT && leftSpriteHasLoaded){//left
 			context.drawImage(this.currentSprite, 
 			this.currentImagePos*this.subImageWidth, 0,
 			this.subImageWidth, this.subImageHeight,

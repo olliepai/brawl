@@ -45,7 +45,8 @@
     } else if (event.key == 'd' && fighter.direction != fighter.RIGHT) {
       fighter.direction = fighter.RIGHT;
 	  this.currentImagePos = 0;
-	  fighter.currentSprite = fighter.rightSprite;		
+	  fighter.currentSprite = fighter.rightSprite;	
+console.log("going right now");	  
     } else if (event.key == 'w') {
       fighter.jump();
     }

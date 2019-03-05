@@ -29,6 +29,7 @@ function Camera() {
     hitWall.x = canvas.width - hitWall.width;
     if (this.cameraPos < this.background.width - canvas.width && noHitWall.x > 0) {
       noHitWall.x -= noHitWall.speedX;
+	  noHitWall.direction = 5;
     }
 
     if (this.cameraPos >= this.background.width - canvas.width) {
