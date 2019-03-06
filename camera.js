@@ -32,7 +32,7 @@ function Camera() {
     }
 
     if (this.cameraPos >= this.background.width - canvas.width) {
-      this.cameraPos = this.background.width - canvas.width
+      this.cameraPos = this.background.width - canvas.width;
     }
   }
 
@@ -52,6 +52,7 @@ function Camera() {
       } else if (challenger.x <= 0 && challenger.direction == challenger.LEFT && this.direction != this.SCROLL_RIGHT) {
         this.scrollLeft(challenger, fighter);
       } else if (challenger.x + challenger.width >= canvas.width && challenger.direction == challenger.RIGHT && this.direction != this.SCROLL_LEFT) {
+        console.log(challenger.direction);
         this.scrollRight(challenger, fighter);
       }
     }
