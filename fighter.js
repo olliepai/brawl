@@ -37,6 +37,7 @@ function Fighter(x, y, side) {
 
   this.hitGround = true;
   this.pushedBack = false;
+  this.atEdge = false;
 
   this.direction;
   this.STILL = 0;
@@ -91,7 +92,7 @@ function Fighter(x, y, side) {
       context.drawImage(this.kick, this.x, this.y, 240, 245);
     } else if (this.isJumping && !this.hitGround) {
       context.drawImage(this.jumped, this.x, this.y, 190, 235);
-    } else if (this.pushedBack) {
+    } else if (this.pushedBack || (this.atEdge && (camera.cameraPos > 0 && camera.cameraPos < camera.background.width - canvas.width))) {
       this.currentImagePos++;
       this.currentImagePos %= this.totalImages;
       if (side == "right") {

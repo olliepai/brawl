@@ -14,6 +14,7 @@ function Camera() {
     this.direction = this.SCROLL_LEFT;
     this.cameraPos -= this.cameraSpeed;
     hitWall.x = 0;
+    hitWall.atEdge = true;
     if (this.cameraPos > 0 && noHitWall.x < canvas.width - noHitWall.width) {
       noHitWall.x += noHitWall.speedX;
     }
@@ -27,6 +28,7 @@ function Camera() {
     this.direction = this.SCROLL_RIGHT;
     this.cameraPos += this.cameraSpeed;
     hitWall.x = canvas.width - hitWall.width;
+    hitWall.atEdge = true;
     if (this.cameraPos < this.background.width - canvas.width && noHitWall.x > 0) {
       noHitWall.x -= noHitWall.speedX;
     }
@@ -52,7 +54,6 @@ function Camera() {
       } else if (challenger.x <= 0 && challenger.direction == challenger.LEFT && this.direction != this.SCROLL_RIGHT) {
         this.scrollLeft(challenger, fighter);
       } else if (challenger.x + challenger.width >= canvas.width && challenger.direction == challenger.RIGHT && this.direction != this.SCROLL_LEFT) {
-        console.log(challenger.direction);
         this.scrollRight(challenger, fighter);
       }
     }

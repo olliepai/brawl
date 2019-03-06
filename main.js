@@ -8,8 +8,8 @@ document.addEventListener("keyup", keyUp);
 document.addEventListener("mousemove", getMousePos);
 document.addEventListener("click", function() { mouseClick = true });
 
-var fighter = new Fighter(64, 500, "left");
-var challenger = new Fighter(1000 - 64 - 50, 500, "right");
+var fighter = new Fighter(64, 300, "left");
+var challenger = new Fighter(1000 - 64 - 190, 300, "right");
 
 var camera = new Camera();
 
@@ -82,6 +82,9 @@ function run() {
   }
 
   else if (state == GAME_STATE) {
+    fighter.atEdge = false;
+    challenger.atEdge = false;
+
     camera.drawBackground(fighter, challenger);
     fighter.physics();
     challenger.physics();
@@ -91,7 +94,7 @@ function run() {
     // COLLISION DETECTION BETWEEN FIGHTERS
     fighter.pushedBack = false;
     challenger.pushedBack = false;
-    if (fighter.x + 180 > challenger.x) {
+    if (fighter.x + 120 > challenger.x) {
       if (fighter.direction == fighter.RIGHT && challenger.direction == challenger.LEFT) {
         fighter.x -= fighter.speedX;
         challenger.x += challenger.speedX;
@@ -117,7 +120,7 @@ function run() {
           fighter.pushedBack = true;
           camera.scrollLeft(fighter, challenger);
         } else {
-          fighter.pushedBack = true;
+          fighter.pushedBack = false;
           challenger.x += challenger.speedX;
         }
       } else if (fighter.x <= 0) {
@@ -132,7 +135,6 @@ function run() {
 
   else if (state == END_STATE) {
     camera.drawBackground(fighter, challenger);
-
     if (fighter.score > challenger.score) {
       this.fighterWinsTxt = new Image();
       this.fighterWinsTxt.src = "./assets/FIGHTER--WINS.png";
@@ -149,6 +151,8 @@ function run() {
 
       if (mouseClick) {
         state = MENU_STATE;
+        fighter.score = 0;
+        challenger.score = 0;
       }
     }
   }
@@ -241,8 +245,8 @@ function keyDown(event) {
     fighter.score = 0, challenger.score = 0;
     fighter.health = 100;
     challenger.health = 100;
-    fighter.x = 64, fighter.y = 500;
-    challenger.x = 1000 - 64 - 50, challenger.y = 500;
+    fighter.x = 64, fighter.y = 300;
+    challenger.x = 1000 - 64 - 190, challenger.y = 300;
   }
 }
 
@@ -282,23 +286,21 @@ function score() {
   if (round >= 4) {
     state = END_STATE;
     round = 1;
-    fighter.score = 0;
-    challenger.score = 0;
   }
   if (fighter.health <= 0) {
     round++;
     challenger.score++;
     fighter.health = 100;
     challenger.health = 100;
-    fighter.x = 64, fighter.y = 500;
-    challenger.x = 1000 - 64 - 50, challenger.y = 500;
+    fighter.x = 64, fighter.y = 300;
+    challenger.x = 1000 - 64 - 190, challenger.y = 300;
   } else if (challenger.health <= 0) {
     round++;
     fighter.score++;
     fighter.health = 100;
     challenger.health = 100;
-    fighter.x = 64, fighter.y = 500;
-    challenger.x = 1000-64 - 50, challenger.y = 500;
+    fighter.x = 64, fighter.y = 300;
+    challenger.x = 1000 - 64 - 190, challenger.y = 300;
   }
 
   // GRAPHICS STUFF
