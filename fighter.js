@@ -37,6 +37,7 @@ function Fighter(x, y, side) {
 
   this.hitGround = true;
   this.pushedBack = false;
+  this.draggedForward = false;
   this.atEdge = false;
 
   this.direction;
@@ -90,7 +91,7 @@ function Fighter(x, y, side) {
       context.drawImage(this.punch, this.x, this.y, 225, 235);
     } else if (this.isAttacking && this.heavyAttacking) {
       context.drawImage(this.kick, this.x, this.y, 240, 245);
-    } else if (this.isJumping && !this.hitGround) {
+    } else if (this.y + this.height < 690) {
       context.drawImage(this.jumped, this.x, this.y, 190, 235);
     } else if (this.pushedBack || (this.atEdge && (camera.cameraPos > 0 && camera.cameraPos < camera.background.width - canvas.width))) {
       this.currentImagePos++;
@@ -106,6 +107,13 @@ function Fighter(x, y, side) {
     		this.subImageWidth, this.subImageHeight,
     		this.x, this.y, this.width, this.height);
       }
+    } else if (this.draggedForward && camera.cameraPos > 0 && camera.cameraPos < camera.background.width - canvas.width) {
+      this.currentImagePos++;
+      this.currentImagePos %= this.totalImages;
+      context.drawImage(this.forward,
+    	this.currentImagePos*this.subImageWidth2, 0,
+    	this.subImageWidth2 - 10, this.subImageHeight2 - 5,
+    	this.x, this.y, this.width, this.height);
     } else if (this.direction == this.STILL) {
       context.drawImage(this.stand, this.x, this.y, 190, 235);
     } else if (this.direction == this.LEFT){

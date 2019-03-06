@@ -17,6 +17,8 @@ function Camera() {
     hitWall.atEdge = true;
     if (this.cameraPos > 0 && noHitWall.x < canvas.width - noHitWall.width) {
       noHitWall.x += noHitWall.speedX;
+    } else {
+      noHitWall.draggedForward = true;
     }
 
     if (this.cameraPos <= 0) {
@@ -31,6 +33,8 @@ function Camera() {
     hitWall.atEdge = true;
     if (this.cameraPos < this.background.width - canvas.width && noHitWall.x > 0) {
       noHitWall.x -= noHitWall.speedX;
+    } else {
+      noHitWall.draggedForward = true;
     }
 
     if (this.cameraPos >= this.background.width - canvas.width) {

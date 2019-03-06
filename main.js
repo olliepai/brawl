@@ -82,6 +82,8 @@ function run() {
   }
 
   else if (state == GAME_STATE) {
+    fighter.draggedForward = false;
+    challenger.draggedForward = false;
     fighter.atEdge = false;
     challenger.atEdge = false;
 
