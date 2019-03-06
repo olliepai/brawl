@@ -253,6 +253,7 @@ function keyDown(event) {
     challenger.health = 100;
     fighter.x = 64, fighter.y = 300;
     challenger.x = 1000 - 64 - 190, challenger.y = 300;
+    camera.cameraPos = (1867 / 2) - (canvas.width / 2) - 25;
   }
 }
 
@@ -304,6 +305,7 @@ function score() {
     challenger.health = 100;
     fighter.x = 64, fighter.y = 300;
     challenger.x = 1000 - 64 - 190, challenger.y = 300;
+    camera.cameraPos = (1867 / 2) - (canvas.width / 2) - 25;
   } else if (challenger.health <= 0) {
     round++;
     fighter.score++;
@@ -311,6 +313,7 @@ function score() {
     challenger.health = 100;
     fighter.x = 64, fighter.y = 300;
     challenger.x = 1000 - 64 - 190, challenger.y = 300;
+    camera.cameraPos = (1867 / 2) - (canvas.width / 2) - 25;
   }
 
   // GRAPHICS STUFF
