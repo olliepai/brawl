@@ -8,8 +8,8 @@ document.addEventListener("keyup", keyUp);
 document.addEventListener("mousemove", getMousePos);
 document.addEventListener("click", function() { mouseClick = true });
 
-var fighter = new Fighter(64, 500, "#25a8ea");
-var challenger = new Fighter(1000 - 64 - 50, 500, "#f49242");
+var fighter = new Fighter(64, 500, "left");
+var challenger = new Fighter(1000 - 64 - 50, 500, "right");
 
 var camera = new Camera();
 
@@ -89,16 +89,21 @@ function run() {
     challenger.move();
 
     // COLLISION DETECTION BETWEEN FIGHTERS
-    if (fighter.x + 42 > challenger.x + 8) {
+    fighter.pushedBack = false;
+    challenger.pushedBack = false;
+    if (fighter.x + 180 > challenger.x) {
       if (fighter.direction == fighter.RIGHT && challenger.direction == challenger.LEFT) {
         fighter.x -= fighter.speedX;
         challenger.x += challenger.speedX;
       } else if (fighter.direction == fighter.RIGHT && challenger.direction == challenger.STILL) {
         if (challenger.x + challenger.width < canvas.width) {
+          challenger.pushedBack = true;
           challenger.x += challenger.speedX;
         } else if (camera.cameraPos < camera.background.width - canvas.width) {
+          challenger.pushedBack = true;
           camera.scrollRight(challenger, fighter);
         } else {
+          challenger.pushedBack = false;
           fighter.x -= fighter.speedX;
         }
       } else if (challenger.x + challenger.width >= canvas.width) {
@@ -106,10 +111,13 @@ function run() {
       }
       else if (fighter.direction == fighter.STILL && challenger.direction == challenger.LEFT) {
         if (fighter.x > 0) {
+          fighter.pushedBack = true;
           fighter.x -= fighter.speedX;
         } else if (camera.cameraPos > 0) {
+          fighter.pushedBack = true;
           camera.scrollLeft(fighter, challenger);
         } else {
+          fighter.pushedBack = true;
           challenger.x += challenger.speedX;
         }
       } else if (fighter.x <= 0) {
@@ -191,34 +199,40 @@ function run() {
 function keyDown(event) {
   if (event.key == 'a' && fighter.direction != fighter.LEFT) {
     fighter.direction = fighter.LEFT;
+    fighter.currentImagePos %= fighter.totalImages;
   } else if (event.key == 'd' && fighter.direction != fighter.RIGHT) {
     fighter.direction = fighter.RIGHT;
+    fighter.currentImagePos %= fighter.totalImages;
   } else if (event.key == 'w' && !fighter.isJumping) {
     fighter.isJumping = true;
     fighter.jump();
   } else if (event.key == 'c' && !fighter.isAttacking && (challenger.direction != challenger.RIGHT || challenger.x + challenger.width >= 1000)) {
     fighter.isAttacking = true;
+    fighter.lightAttacking = true;
     fighter.lightAttack(challenger);
   } else if (event.key == 'v' && !fighter.isAttacking && (challenger.direction != challenger.RIGHT || challenger.x + challenger.width >= 1000)) {
     fighter.isAttacking = true;
+    fighter.heavyAttacking = true;
     fighter.heavyAttack(challenger);
   }
 
   if (event.key == 'j' && challenger.direction != challenger.LEFT) {
     challenger.direction = challenger.LEFT;
+    challenger.currentImagePos %= challenger.totalImages;
   } else if (event.key == 'l' && challenger.direction != challenger.RIGHT) {
     challenger.direction = challenger.RIGHT;
+    challenger.currentImagePos %= challenger.totalImages;
   } else if (event.key == 'i' && !challenger.isJumping) {
     challenger.isJumping = true;
     challenger.jump();
   } else if (event.key == 'n' && !challenger.isAttacking && (fighter.direction != fighter.LEFT || fighter.x <= 0)) {
     challenger.isAttacking = true;
+    challenger.lightAttacking = true;
     challenger.lightAttack(fighter);
-    console.log("light");
   } else if (event.key == 'b' && !challenger.isAttacking && (fighter.direction != fighter.LEFT || fighter.x <= 0)) {
     challenger.isAttacking = true;
+    challenger.heavyAttacking = true;
     challenger.heavyAttack(fighter);
-    console.log("heavy");
   }
 
   if (event.key == 'q') {
@@ -238,11 +252,14 @@ function keyUp(event) {
   } else if (event.key == 'd' && fighter.direction == fighter.RIGHT) {
     fighter.direction = fighter.STILL;
   } else if (event.key == 'w') {
+    keyUpRight = true;
     fighter.isJumping = false;
   } else if (event.key == 'c' && fighter.isAttacking) {
     fighter.isAttacking = false;
+    fighter.lightAttacking = false;
   } else if (event.key == 'v' && fighter.isAttacking) {
     fighter.isAttacking = false;
+    fighter.heavyAttacking = false;
   }
 
   if (event.key == 'j' && challenger.direction == challenger.LEFT) {
@@ -253,8 +270,10 @@ function keyUp(event) {
     challenger.isJumping = false;
   } else if (event.key == 'n' && challenger.isAttacking) {
     challenger.isAttacking = false;
+    challenger.lightAttacking = false;
   } else if (event.key == 'b' && challenger.isAttacking) {
     challenger.isAttacking = false;
+    challenger.heavyAttacking = false;
   }
 }
 
