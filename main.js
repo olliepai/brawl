@@ -87,10 +87,38 @@ function run() {
     challenger.physics();
     fighter.move();
     challenger.move();
+
+    // COLLISION DETECTION BETWEEN FIGHTERS
+    if (fighter.x + 42 > challenger.x + 8) {
+      if (fighter.direction == fighter.RIGHT && challenger.direction == challenger.LEFT) {
+        fighter.x -= fighter.speedX;
+        challenger.x += challenger.speedX;
+      } else if (fighter.direction == fighter.RIGHT && challenger.direction == challenger.STILL) {
+        if (challenger.x + challenger.width < canvas.width) {
+          challenger.x += challenger.speedX;
+        } else if (camera.cameraPos < camera.background.width - canvas.width) {
+          camera.scrollRight(challenger, fighter);
+        } else {
+          fighter.x -= fighter.speedX;
+        }
+      } else if (challenger.x + challenger.width >= canvas.width) {
+        fighter.x -= fighter.speedX;
+      }
+      else if (fighter.direction == fighter.STILL && challenger.direction == challenger.LEFT) {
+        if (fighter.x > 0) {
+          fighter.x -= fighter.speedX;
+        } else if (camera.cameraPos > 0) {
+          camera.scrollLeft(fighter, challenger);
+        } else {
+          challenger.x += challenger.speedX;
+        }
+      } else if (fighter.x <= 0) {
+        challenger.x += challenger.speedX;
+      }
+    }
+
     fighter.draw();
     challenger.draw();
-    context.fillRect(fighter.x + 32, 0, 5, canvas.height);
-    context.fillRect(challenger.x + 50 - 34.5, 0, 5, canvas.height);
     score();
   }
 
@@ -168,13 +196,12 @@ function keyDown(event) {
   } else if (event.key == 'w' && !fighter.isJumping) {
     fighter.isJumping = true;
     fighter.jump();
-  } else if (event.key == 'c' && !fighter.isAttacking && challenger.direction != challenger.RIGHT) {
+  } else if (event.key == 'c' && !fighter.isAttacking && (challenger.direction != challenger.RIGHT || challenger.x + challenger.width >= 1000)) {
     fighter.isAttacking = true;
     fighter.lightAttack(challenger);
-  } else if (event.key == 'v' && !fighter.isAttacking && challenger.direction != challenger.RIGHT) {
+  } else if (event.key == 'v' && !fighter.isAttacking && (challenger.direction != challenger.RIGHT || challenger.x + challenger.width >= 1000)) {
     fighter.isAttacking = true;
     fighter.heavyAttack(challenger);
-    console.log(challenger.direction);
   }
 
   if (event.key == 'j' && challenger.direction != challenger.LEFT) {
@@ -184,12 +211,14 @@ function keyDown(event) {
   } else if (event.key == 'i' && !challenger.isJumping) {
     challenger.isJumping = true;
     challenger.jump();
-  } else if (event.key == 'n' && !challenger.isAttacking && fighter.direction != fighter.LEFT) {
+  } else if (event.key == 'n' && !challenger.isAttacking && (fighter.direction != fighter.LEFT || fighter.x <= 0)) {
     challenger.isAttacking = true;
     challenger.lightAttack(fighter);
-  } else if (event.key == 'b' && !challenger.isAttacking && fighter.direction != fighter.LEFT) {
+    console.log("light");
+  } else if (event.key == 'b' && !challenger.isAttacking && (fighter.direction != fighter.LEFT || fighter.x <= 0)) {
     challenger.isAttacking = true;
     challenger.heavyAttack(fighter);
+    console.log("heavy");
   }
 
   if (event.key == 'q') {
@@ -234,6 +263,8 @@ function score() {
   if (round >= 4) {
     state = END_STATE;
     round = 1;
+    fighter.score = 0;
+    challenger.score = 0;
   }
   if (fighter.health <= 0) {
     round++;
@@ -326,5 +357,12 @@ function hover(x, y, width, height) {
     return true;
   } else {
     return false;
+  }
+}
+
+function checkOverlap() {
+  if (fighter.x + 45 + 8 > challenger.x) {
+    fighter.x = fighter.x - fighter.speedX;
+    challenger.x = challenger.x + fighter.speedX;
   }
 }

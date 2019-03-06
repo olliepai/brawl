@@ -58,7 +58,6 @@ function Fighter(x, y, color) {
 
   this.lightAttack = function(hit) {
     if (this.hits(hit)) {
-      //console.log(hit.health);
       hit.health -= 4;
     }
   }
@@ -66,7 +65,6 @@ function Fighter(x, y, color) {
   this.heavyAttack = function(hit) {
     if (this.hits(hit)) {
       hit.health -= 8;
-      //console.log(hit.health);
     }
   }
 }
